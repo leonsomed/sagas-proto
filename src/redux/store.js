@@ -1,9 +1,16 @@
 import { createStore, applyMiddleware } from 'redux';
 import createSagaMiddleware from 'redux-saga';
-import reducers from './reducers';
+import { reducer } from './reducers';
+import { todoSaga } from './sagas/todo';
+
+const logger = store => next => action => {
+  console.log(action);
+
+  return next(action);
+};
 
 const sagaMiddleware = createSagaMiddleware();
 
-export default createStore(reducers, applyMiddleware(sagaMiddleware));
+export const store = createStore(reducer, applyMiddleware(logger, sagaMiddleware));
 
-// sagaMiddleware.run(sagas);
+sagaMiddleware.run(todoSaga);
